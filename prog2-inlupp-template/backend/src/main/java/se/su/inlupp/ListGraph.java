@@ -19,7 +19,21 @@ public class ListGraph<T> implements Graph<T> {
 
   @Override
   public void connect(T node1, T node2, String name, int weight) {
-    throw new UnsupportedOperationException("Unimplemented method 'connect'");
+    if (graf.containsKey(node1) && graf.containsKey(node2)) {
+      if (weight >= 0) {
+        for (Edge edges : graf.get(node1)) {
+          if (edges.getDestination() == node2) {
+            throw new IllegalStateException("There can only be one edge between nodes");
+          }
+        }
+        graf.get(node1).add(new Edge<T>(name, node1, node2, weight));
+        graf.get(node2).add(new Edge<T>(name, node2, node1, weight));
+      } else {
+        throw new IllegalArgumentException("Weight can not be less than 0");
+      }
+    } else {
+      throw new NoSuchElementException("At least one of the nodes does not exist");
+    }
   }
 
   @Override
