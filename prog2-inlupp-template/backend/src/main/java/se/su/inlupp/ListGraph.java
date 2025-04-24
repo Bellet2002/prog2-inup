@@ -54,23 +54,43 @@ public class ListGraph<T> implements Graph<T> {
 
   @Override
   public Edge<T> getEdgeBetween(T node1, T node2) {
-    throw new UnsupportedOperationException("Unimplemented method 'getEdgeBetween'");
+    if (graf.containsKey(node1) && graf.containsKey(node2)) {
+      for (Edge edge : graf.get(node1)) {
+        if (edge.getDestination().equals(node2)) {
+          return edge;
+        }
+      }
+    } else {
+      throw new NoSuchElementException("At least one of the nodes does not exist");
+    }
+    return null;
   }
 
   @Override
   public void disconnect(T node1, T node2) {
-    throw new UnsupportedOperationException("Unimplemented method 'disconnect'");
+    if (graf.containsKey(node1) && graf.containsKey(node2)) {
+      Edge<T> edge1 = this.getEdgeBetween(node1, node2);
+      Edge<T> edge2 = this.getEdgeBetween(node2, node1);
+      if (edge1 == null) {
+        throw new IllegalStateException("There is no connection between these nodes");
+      }
+      graf.get(node1).remove(edge1);
+      graf.get(node2).remove(edge2);
+    } else {
+      throw new NoSuchElementException("At least one of the nodes does not exist");
+    }
   }
 
   @Override
   public void remove(T node) {
-    try {
-        for (List<Edge<T>> edges : graf.values()) {
-          edges.removeIf(edge -> edge.getDestination().equals(node));
-        }
-        graf.remove(node);
-    } catch (NoSuchElementException e) {
-        e.getStackTrace();
+    if (graf.containsKey(node)) {
+      List<Edge<T>> edges = new ArrayList<>(graf.get(node)); //Java gillar tydligen inte när man modifierar listan samtidigt som man itererar över den så jag skapar en kopia som jag itererar samtidigt som jag ändrar orginalet
+      for (Edge<T> edge : edges) {
+        this.disconnect(node, edge.getDestination());
+      }
+      graf.remove(node);
+    } else {
+      throw new NoSuchElementException("The node does not exist");
     }
   }
 
