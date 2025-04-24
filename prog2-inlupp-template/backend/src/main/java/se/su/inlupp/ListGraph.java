@@ -21,7 +21,7 @@ public class ListGraph<T> implements Graph<T> {
   public void connect(T node1, T node2, String name, int weight) {
     if (graf.containsKey(node1) && graf.containsKey(node2)) {
       if (weight >= 0) {
-        for (Edge edges : graf.get(node1)) {
+        for (Edge<T> edges : graf.get(node1)) {
           if (edges.getDestination() == node2) {
             throw new IllegalStateException("There can only be one edge between nodes");
           }
@@ -55,7 +55,7 @@ public class ListGraph<T> implements Graph<T> {
   @Override
   public Edge<T> getEdgeBetween(T node1, T node2) {
     if (graf.containsKey(node1) && graf.containsKey(node2)) {
-      for (Edge edge : graf.get(node1)) {
+      for (Edge<T> edge : graf.get(node1)) {
         if (edge.getDestination().equals(node2)) {
           return edge;
         }
