@@ -5,7 +5,7 @@ public class Edge<T> {
     private T to;
     private int weight;
 
-    public Edge(String name, T from, T to, int weight) {
+    public Edge(String name, T to, int weight) {
         this.name = name;
         this.to = to;
         if (weight > 0) { 
