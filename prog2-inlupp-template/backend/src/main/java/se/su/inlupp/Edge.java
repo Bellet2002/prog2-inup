@@ -2,13 +2,11 @@ package se.su.inlupp;
 
 public class Edge<T> {
     private String name;
-    private T from;
     private T to;
     private int weight;
 
     public Edge(String name, T from, T to, int weight) {
         this.name = name;
-        this.from = from;
         this.to = to;
         if (weight > 0) { 
             this.weight = weight;
@@ -39,6 +37,6 @@ public class Edge<T> {
     }
 
     public String toString() {
-        return "Connection name: " + this.name + ", from: " + from.toString() + ", to: " + to.toString() + ", weight: " + weight;
+        return "Connection name: " + this.name + ", to: " + to.toString() + ", weight: " + weight;
     }    
 }
