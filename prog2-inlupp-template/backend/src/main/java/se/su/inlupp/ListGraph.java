@@ -26,8 +26,8 @@ public class ListGraph<T> implements Graph<T> {
             throw new IllegalStateException("There can only be one edge between nodes");
           }
         }
-        graf.get(node1).add(new Edge<T>(name, node1, node2, weight));
-        graf.get(node2).add(new Edge<T>(name, node2, node1, weight));
+        graf.get(node1).add(new Edge<T>(name, node2, weight));
+        graf.get(node2).add(new Edge<T>(name, node1, weight));
       } else {
         throw new IllegalArgumentException("Weight can not be less than 0");
       }
