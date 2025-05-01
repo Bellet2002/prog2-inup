@@ -12,12 +12,7 @@ public class ListGraph<T> implements Graph<T> {
 
   @Override
   public void connect(T node1, T node2, String name, int weight) {
-    if (!nodesExist(node1, node2)){
-      throw new NoSuchElementException ("One or both nodes do not exist in the graph");
-    }
-    if (weight < 0){
-        throw new IllegalArgumentException ("Weight cannot be negative"); 
-    }
+    if (nodesExist(node1, node2)){
       for (Edge<T> edges : graf.get(node1)) {
         if (edges.getDestination() == node2) {
           throw new IllegalStateException("There can only be one edge between nodes");
