@@ -39,6 +39,9 @@ public class ListGraph<T> implements Graph<T> {
   @Override
   public void setConnectionWeight(T node1, T node2, int weight) {
     throw new UnsupportedOperationException("Unimplemented method 'setConnectionWeight'");
+    //Hitta edgen i node1 där to = node2
+    //Använd setWeight i edge-klassen för att ändra vikten
+    //Repetera för node 2
   }
 
   @Override
@@ -50,6 +53,7 @@ public class ListGraph<T> implements Graph<T> {
   @Override
   public Collection<Edge<T>> getEdgesFrom(T node) {
     throw new UnsupportedOperationException("Unimplemented method 'getEdgesFrom'");
+    //Kopiera List<Edge<T>> till en ny collection och returnera den
   }
 
   @Override
@@ -97,10 +101,15 @@ public class ListGraph<T> implements Graph<T> {
   @Override
   public boolean pathExists(T from, T to) {
     throw new UnsupportedOperationException("Unimplemented method 'pathExists'");
+    //Kolla om noderna existerar alternativt låt getPath hantera det
+    //Kalla på getPath och om det != returnerar null returnera true
   }
 
   @Override
   public List<Edge<T>> getPath(T from, T to) {
     throw new UnsupportedOperationException("Unimplemented method 'getPath'");
+    //Kolla att noderna existerar
+    //Gör en bredden-först sökning enligt föreläsningen som då returnerar den kortaste vägen (?)
+    //Alternativt räkna värden för alla vägar man hittar och returnera den "billigaste"
   }
 }
