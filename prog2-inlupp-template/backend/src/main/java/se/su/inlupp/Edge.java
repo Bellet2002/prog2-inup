@@ -7,7 +7,7 @@ public class Edge<T> {
 
     public Edge(String name, T to, int weight) {
         if (name == null || name.isEmpty()) {
-            throw new illegalArgumentExeception("Name cannot be null or empty"); 
+            throw new IllegalArgumentException("Name cannot be null or empty"); 
         
         this.name = name;
         this.to = to;
