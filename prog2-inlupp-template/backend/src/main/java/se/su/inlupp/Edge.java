@@ -37,6 +37,6 @@ public class Edge<T> {
     }
 
     public String toString() {
-        return "Connection name: " + this.name + ", to: " + to.toString() + ", weight: " + weight;
+        return "till " + to.toString() + " med " + this.name + " tar " + weight;
     }    
 }
