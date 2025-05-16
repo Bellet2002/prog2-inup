@@ -27,7 +27,7 @@ public class Gui extends Application {
   //Meny-knappar
   private MenuBar menuBar;
   private MenuItem newMapBtn;
-  private MenuItem openMapBtn;
+  private MenuItem openBtn;
   private MenuItem saveMapBtn;
   private MenuItem saveImageBtn;
   private MenuItem exitBtn;
@@ -54,7 +54,6 @@ public class Gui extends Application {
 
       //Meny eventhandlers
       newMapBtn.setOnAction(e -> newMapCreation());
-      //openMapBtn.setOnAction(e -> openMap("images/europa.gif"));
 
       scene = new Scene(root, 550, 480);
       stage.setScene(scene);
@@ -74,13 +73,13 @@ public class Gui extends Application {
 
   private MenuBar createMenuBar() {
       newMapBtn = new MenuItem("New map");
-      openMapBtn = new MenuItem("Open");
+      openBtn = new MenuItem("Open");
       saveMapBtn = new MenuItem("Save");
       saveImageBtn = new MenuItem("Save image");
       exitBtn = new MenuItem("Exit");
 
       Menu file = new Menu("File");
-      file.getItems().addAll(newMapBtn, openMapBtn, saveMapBtn, saveImageBtn, exitBtn);
+      file.getItems().addAll(newMapBtn, openBtn, saveMapBtn, saveImageBtn, exitBtn);
 
       MenuBar menuBar = new MenuBar(file);
       return menuBar;
