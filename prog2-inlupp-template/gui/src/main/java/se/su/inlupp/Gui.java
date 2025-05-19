@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -67,7 +68,7 @@ public class Gui extends Application {
   private MenuBar menuBar;
   private MenuItem newMapBtn;
   private MenuItem openBtn;
-  private MenuItem saveMapBtn;
+  private MenuItem saveBtn;
   private MenuItem saveImageBtn;
   private MenuItem exitBtn;
 
@@ -85,6 +86,7 @@ public class Gui extends Application {
   private Pane graphPane;
   private ListGraph<Node> listGraph; 
   private List<Button> nodeButtons;
+  private File map;
 
   public void start(Stage stage) {
       this.stage = stage;
@@ -100,9 +102,10 @@ public class Gui extends Application {
       //Meny eventhandlers
       newMapBtn.setOnAction(e -> newMapCreation());
       openBtn.setOnAction(e -> openGraph());
+      saveBtn.setOnAction(e -> saveGraph());
 
       root.setCenter(graphPane);
-      scene = new Scene(root, 550, 480);
+      scene = new Scene(root, 550, 100);
       stage.setScene(scene);
       stage.show();
     }
@@ -123,12 +126,12 @@ public class Gui extends Application {
   private MenuBar createMenuBar() {
       newMapBtn = new MenuItem("New map");
       openBtn = new MenuItem("Open");
-      saveMapBtn = new MenuItem("Save");
+      saveBtn = new MenuItem("Save");
       saveImageBtn = new MenuItem("Save image");
       exitBtn = new MenuItem("Exit");
 
       Menu file = new Menu("File");
-      file.getItems().addAll(newMapBtn, openBtn, saveMapBtn, saveImageBtn, exitBtn);
+      file.getItems().addAll(newMapBtn, openBtn, saveBtn, saveImageBtn, exitBtn);
 
       MenuBar menuBar = new MenuBar(file);
       return menuBar;
@@ -164,6 +167,7 @@ public class Gui extends Application {
 
   //Öppnar en bild och anpassar fönstrets storlek efter bilden
   private void openMap(File fileName) {
+    map = fileName;
     Image image = new Image(fileName.toURI().toString());
     ImageView view = new ImageView(image);
 
@@ -259,6 +263,35 @@ public class Gui extends Application {
       //Lägg till eventhandlers för nodknappar här, skicka sedan btn vidare till metoderna så får ni rätt instans
       nodeButtons.add(btn);
       graphPane.getChildren().add(btn);
+    }
+  }
+
+  private void saveGraph() {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Save Graph");
+    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Graph Files", "*.graph"));
+    fileChooser.setInitialDirectory(new File("images"));
+
+    File file = fileChooser.showSaveDialog(stage);
+
+    if (file != null) {
+      try (PrintWriter writer = new PrintWriter(file)) {
+        writer.println("File:" + map.getName());
+
+        for (Node node : listGraph.getNodes()) {
+          writer.printf("%s;%f;%f;", node.getName(), node.getxCoordinate(), node.getyCoordinate());
+        }
+        writer.println();
+
+        for (Node node : listGraph.getNodes()) {
+          for (Edge<Node> edge : listGraph.getEdgesFrom(node)) {
+            writer.printf("%s;%s;%s;%d;%n", node.getName(), edge.getDestination().getName(), edge.getName(), edge.getWeight());
+          }
+        }
+
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
   }
 }
