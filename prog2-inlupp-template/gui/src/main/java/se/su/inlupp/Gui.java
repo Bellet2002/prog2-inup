@@ -7,22 +7,30 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
+import javax.imageio.ImageIO;
 import javax.swing.border.Border;
 import javax.xml.stream.Location;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -63,7 +71,6 @@ public class Gui extends Application {
     }
   }
 
-  private Stage stage;
   //Meny-knappar
   private MenuBar menuBar;
   private MenuItem newMapBtn;
@@ -81,12 +88,14 @@ public class Gui extends Application {
   private Button findPathBtn;
   //kanske fult, kan lägga in i en lista möjligtvis?
 
+  private Stage stage;
   private Scene scene;
   private BorderPane root;
   private Pane graphPane;
   private ListGraph<Node> listGraph; 
   private List<Button> nodeButtons;
   private File map;
+  private Boolean unsavedChanges = false; //Håller koll på osparade ändringar, om någonting läggs till, ändras eller tas bort sätt denna till true
 
   public void start(Stage stage) {
       this.stage = stage;
@@ -103,6 +112,12 @@ public class Gui extends Application {
       newMapBtn.setOnAction(e -> newMapCreation());
       openBtn.setOnAction(e -> openGraph());
       saveBtn.setOnAction(e -> saveGraph());
+      saveImageBtn.setOnAction(e -> saveImage());
+      exitBtn.setOnAction(e -> exit());
+      stage.setOnCloseRequest(e -> {
+        e.consume();
+        exit();
+      });
 
       root.setCenter(graphPane);
       scene = new Scene(root, 550, 100);
@@ -289,9 +304,45 @@ public class Gui extends Application {
           }
         }
 
+      unsavedChanges = false;
+
       } catch (IOException e) {
         e.printStackTrace();
       }
+    }
+  }
+
+  private void saveImage() {
+    try {
+      WritableImage image = scene.snapshot(null);
+      File file = new File("capture.png");
+      ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void exit() {
+    if (unsavedChanges) {
+      Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+      alert.setTitle("Unsaved Changes");
+      alert.setHeaderText("You have unsaved changes");
+      alert.setContentText("You will lose your changes if you exit without saving");
+
+      ButtonType ok = new ButtonType("OK");
+      ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+      alert.getButtonTypes().setAll(ok, cancel);
+
+      Optional<ButtonType> result = alert.showAndWait();
+
+      if (result.isPresent()) {
+        if (result.get() == ok) {
+          Platform.exit();
+        }
+      }
+    } else {
+      Platform.exit();
     }
   }
 }
